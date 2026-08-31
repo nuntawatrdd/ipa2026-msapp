@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Sample app</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <h1>You are calling me from {{request.remote_addr}}</h1>
+    <form method="POST" action="/add">
+    <input name="ip_address" placeholder="IP_ADDRESS!!!" required />
+    <input name="username" placeholder="NAME" required />
+    <input name="password" placeholder="PASSWORD" required />
+    <button type="submit">Add Router</button>
+  </form>
+
+  <ul>
+    {% for comment in meow %}
+      <li>
+	       {{ comment.ip }} - {{ comment.name }}	 
+         <form method="POST" action="{{ url_for('delete_router') }}" style="display:inline">
+          <input type="hidden" name="idx" value="{{ comment._id }}">
+          <button type="submit">Delete</button>
+</form>
+      </li>
+    {% endfor %}
+  </ul>
+
+</body>
+</html>
