@@ -4,13 +4,12 @@ from flask import Flask, request, url_for, render_template, redirect
 from pymongo import MongoClient
 from bson import ObjectId
 
-client = MongoClient("mongodb://mongo:27017/")
-mydb = client["IPA_2026_S3"]
-mycol = mydb["My_Router"]
-
 mongo_uri  = os.environ.get("MONGO_URI")
 db_name    = os.environ.get("DB_NAME")
-print(mongo_uri)
+
+client = MongoClient(mongo_uri)
+mydb = client["IPA_2026_S3"]
+mycol = mydb["My_Router"]
 
 app = Flask(__name__)
 
