@@ -25,6 +25,21 @@ services:
     env_file:
       - .env
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+    depends_on:
+      - web
+      - mongo
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "ipa2026_db"
+
 volumes:
   mongo-data:
 
