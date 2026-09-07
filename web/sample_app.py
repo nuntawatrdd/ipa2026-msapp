@@ -33,5 +33,13 @@ def delete_router():
     mycol.delete_one({'_id': ObjectId(idx)})
     return redirect(url_for("index"))
 
+@app.route("/router/<router_id>", methods=["GET"])
+def router_detail(router_id):
+    router = mycol.find_one({'_id': ObjectId(router_id)})
+    router_ip = router.get("ip")
+    router_doc = mydb["Router_Interfaces"].find_one({"ip": router_ip})
+    interfaces = router_doc.get("interfaces", []) if router_doc else []
+    return render_template("router.html", ip=router_ip, interfaces=interfaces)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)

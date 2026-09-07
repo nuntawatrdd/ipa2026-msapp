@@ -20,7 +20,7 @@
     <ul>
       {% for comment in meow %}
       <li>
-        {{ comment.ip }} - {{ comment.name }}
+        <a href="{{ url_for('router_detail', router_id=comment._id) }}">{{ comment.ip }}</a> - {{ comment.name }}
         <form method="POST" action="{{ url_for('delete_router') }}" style="display:inline">
           <input type="hidden" name="idx" value="{{ comment._id }}">
           <button type="submit">Delete</button>
