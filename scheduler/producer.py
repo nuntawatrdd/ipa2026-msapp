@@ -1,7 +1,11 @@
 import pika
 
 def produce(host, body):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host))
+
+    credentials = pika.PlainCredentials('admin', 'rabbitmq')
+
+    parameters = pika.ConnectionParameters(host, credentials=credentials)
+    connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
 
     channel.exchange_declare(exchange="jobs", exchange_type="direct")

@@ -11,7 +11,7 @@ services:
       - .env
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
-      DB_NAME: "ipa2026_db"
+      DB_NAME: "IPA_2026_S3"
 
 
   mongo:
@@ -30,15 +30,50 @@ services:
     ports:
       - "15672:15672"
     depends_on:
+      - mongo
       - web
+    networks:
+      - app-net
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: Dockerfile
+    networks:
+      - app-net
+    depends_on:
+      - rabbitmq
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "IPA_2026_S3"
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_USER: "admin"
+      RABBITMQ_PASS: "rabbitmq"
+      PYTHONUNBUFFERED: 1
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
       - mongo
     networks:
       - app-net
     env_file:
       - .env
     environment:
-      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
-      DB_NAME: "ipa2026_db"
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017"
+      DB_NAME: "IPA_2026_S3"
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_USER: "admin"
+      RABBITMQ_PASS: "rabbitmq"
+      PYTHONUNBUFFERED: 1
 
 volumes:
   mongo-data:
