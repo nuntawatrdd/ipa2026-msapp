@@ -1,23 +1,21 @@
-import os
-from datetime import datetime, timezone
 from pymongo import MongoClient
+from datetime import datetime, UTC
+import os
 
-def save_router_interfaces(router_ip, interfaces):
-    mongo_uri = os.environ.get("MONGO_URI")
-    db_name = os.environ.get("DB_NAME", "IPA_2026_S3")
 
-    client = MongoClient(mongo_uri)
-    db = client[db_name]
-    collection = db["Router_Interfaces"]
+def save_interface_status(router_ip, interfaces):
 
-    record = {
-        "ip": router_ip,
+    MONGO_URI = os.getenv("MONGO_URI")
+    DB_NAME = os.getenv("DB_NAME")
+
+    client = MongoClient(MONGO_URI)
+    db = client[DB_NAME]
+    collection = db["interface_status"]
+
+    data = {
+        "router_ip": router_ip,
+        "timestamp": datetime.now(UTC),
         "interfaces": interfaces,
-        "timestamp": datetime.now(timezone.utc)
     }
-
-    collection.update_one(
-        {"ip": router_ip},
-        {"$set": record},
-        upsert=True
-    )
+    collection.insert_one(data)
+    client.close()
