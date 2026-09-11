@@ -4,7 +4,7 @@ import json
 import pika
 from bson import json_util
 from netmiko import ConnectHandler
-from database import save_router_interfaces
+from database import save_interface_status
 
 def process_job(ch, method, properties, body):
     try:
@@ -28,7 +28,7 @@ def process_job(ch, method, properties, body):
 
         print(json.dumps(interfaces, indent=2))
 
-        save_router_interfaces(router_ip, interfaces)
+        save_interface_status(router_ip, interfaces)
         print(f"Stored interface status for {router_ip}")
 
         ch.basic_ack(delivery_tag=method.delivery_tag)

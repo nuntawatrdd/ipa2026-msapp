@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Router Detail</title>
-  <link rel="stylesheet" href="/static/style.css" />  
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
-  <h1>Router: {{ ip }}</h1>
+  <h1>Router: {{ records.router_ip }}</h1>
+
 
   <table>
     <thead>
       <tr>
+        <th>Timestamp</th>
         <th>Interface</th>
         <th>IP Address</th>
         <th>Status</th>
@@ -17,15 +21,21 @@
       </tr>
     </thead>
     <tbody>
-      {% for item in interfaces %}
+      {% for record in records %}
+      {% for item in record.interfaces %}
       <tr>
+        <td>{{ record.timestamp }}</td>
         <td>{{ item.interface }}</td>
         <td>{{ item.ip_address }}</td>
         <td>{{ item.status }}</td>
         <td>{{ item.proto }}</td>
       </tr>
       {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
+
+
 </body>
+
 </html>

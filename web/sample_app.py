@@ -1,5 +1,5 @@
 import os
-
+import pymongo
 from flask import Flask, request, url_for, render_template, redirect
 from pymongo import MongoClient
 from bson import ObjectId
@@ -36,10 +36,16 @@ def delete_router():
 @app.route("/router/<router_id>", methods=["GET"])
 def router_detail(router_id):
     router = mycol.find_one({'_id': ObjectId(router_id)})
-    router_ip = router.get("ip")
-    router_doc = mydb["Router_Interfaces"].find_one({"ip": router_ip})
-    interfaces = router_doc.get("interfaces", []) if router_doc else []
-    return render_template("router.html", ip=router_ip, interfaces=interfaces)
+    router_ip = router.get("router_ip")
+
+    records = list(
+        mydb["Router_Interfaces"]
+        .find({"router_ip": router_ip})
+        .sort("timestamp", -1)
+        .limit(3)
+    )
+    print(records)
+    return render_template("router.html", ip=router_ip, records=records)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)

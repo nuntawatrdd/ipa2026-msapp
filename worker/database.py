@@ -10,7 +10,7 @@ def save_interface_status(router_ip, interfaces):
 
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]
-    collection = db["interface_status"]
+    collection = db["Router_Interfaces"]
 
     data = {
         "router_ip": router_ip,
