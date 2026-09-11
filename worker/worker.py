@@ -11,7 +11,7 @@ from database import save_interface_status
 def process_job(ch, method, properties, body):
     router_ip = None
     try:
-        data = json_util.loads(body.decode('utf-8'))
+        data = json_util.loads(body.decode("utf-8"))
 
         router_ip = data.get("ip")
         username = data.get("name")
@@ -20,15 +20,15 @@ def process_job(ch, method, properties, body):
         print(f"Received job for router {router_ip}")
 
         device = {
-            'device_type': 'cisco_ios',
-            'host': router_ip,
-            'username': username,
-            'password': password,
+            "device_type": "cisco_ios",
+            "host": router_ip,
+            "username": username,
+            "password": password,
         }
 
         with ConnectHandler(**device) as net_connect:
             interfaces = net_connect.send_command(
-                'show ip interface brief', use_textfsm=True
+                "show ip interface brief", use_textfsm=True
             )
 
         print(json.dumps(interfaces, indent=2))
@@ -49,9 +49,7 @@ def main():
     password = os.environ.get("RABBITMQ_PASS", "rabbitmq")
 
     credentials = pika.PlainCredentials(user, password)
-    parameters = pika.ConnectionParameters(
-        host=rabbitmq_host, credentials=credentials
-    )
+    parameters = pika.ConnectionParameters(host=rabbitmq_host, credentials=credentials)
 
     retry = 0
     while True:
@@ -74,9 +72,7 @@ def main():
     )
 
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(
-        queue="router_jobs", on_message_callback=process_job
-    )
+    channel.basic_consume(queue="router_jobs", on_message_callback=process_job)
     channel.start_consuming()
 
 

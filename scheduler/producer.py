@@ -2,7 +2,7 @@ import pika
 
 
 def produce(host, body):
-    credentials = pika.PlainCredentials('admin', 'rabbitmq')
+    credentials = pika.PlainCredentials("admin", "rabbitmq")
     parameters = pika.ConnectionParameters(host, credentials=credentials)
     connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
