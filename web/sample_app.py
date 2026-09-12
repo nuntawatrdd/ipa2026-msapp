@@ -39,7 +39,7 @@ def delete_router():
 @app.route("/router/<router_id>", methods=["GET"])
 def router_detail(router_id):
     router = mycol.find_one({"_id": ObjectId(router_id)})
-    router_ip = router.get("router_ip")
+    router_ip = router.get("ip")
 
     records = list(
         mydb["Router_Interfaces"]
@@ -47,7 +47,7 @@ def router_detail(router_id):
         .sort("timestamp", -1)
         .limit(3)
     )
-    print(records)
+    print(records, "here")
     return render_template("router.html", ip=router_ip, records=records)
 
 
